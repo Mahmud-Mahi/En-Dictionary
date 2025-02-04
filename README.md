@@ -10,10 +10,10 @@ Also you can edit the result of the searched word & save the changes in json fil
 This code is completely written in python & no need to install python interpreter to excute it.
 
 # Provide
-"Definition":
-"Examples":
-"Synonyms":
-"Antonyms":
+"Definition": \n
+"Examples": \n
+"Synonyms": \n
+"Antonyms": \n
 
 # Installation:
 To run this program place the 'dict' folder in your home directory. 
