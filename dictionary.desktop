@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=En-Dictionary
+Exec=/home/desktop/En-Dictionary
+Icon=/home/dict/dictionary.png
+Terminal=false
+Categories=Utility;
