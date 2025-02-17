@@ -3,6 +3,7 @@ import requests
 import Levenshtein
 import tkinter as tk
 from tkinter import messagebox, simpledialog
+from tkinter import *
 import threading
 import os
 import sys
@@ -205,6 +206,7 @@ def display_result(result, search_term):
     # Hide any previous suggestion buttons.
     suggestion_yes.pack_forget()
     suggestion_no.pack_forget()
+    frame_btn.pack_forget()
     
     if isinstance(result, dict) and result:
         text = (
@@ -224,7 +226,8 @@ def display_result(result, search_term):
             suggestion_yes.config(command=lambda m=match: yes(m))
             suggestion_no.config(command=lambda w=search_term: handle_no(w))
             suggestion_yes.pack(side="left", padx=10, pady=10)
-            suggestion_no.pack(side="left", padx=10, pady=10)
+            suggestion_no.pack(side="right", padx=10, pady=10)
+            frame_btn.pack(side="bottom", padx=40, pady=40)
             # Give focus to the Yes button so Enter triggers it.
             suggestion_yes.focus_set()
         else:
@@ -233,7 +236,8 @@ def display_result(result, search_term):
             suggestion_yes.config(command=lambda w=search_term: add_word(w))
             suggestion_no.config(command=lambda w=search_term: handle_no(w))
             suggestion_yes.pack(side="left", padx=10, pady=10)
-            suggestion_no.pack(side="left", padx=10, pady=10)
+            suggestion_no.pack(side="right", padx=10, pady=10)
+            frame_btn.pack(side="bottom", padx=40, pady=40)
             suggestion_yes.focus_set()
     window.update_idletasks()
 
@@ -254,6 +258,7 @@ def update_label(event=None):
     """Start a new search thread using the word in the entry widget."""
     suggestion_yes.pack_forget()
     suggestion_no.pack_forget()
+    frame_btn.pack_forget()
     search_term = entry_w.get().strip().lower()
     if search_term:
         threading.Thread(target=async_search, args=(search_term,)).start()
@@ -284,6 +289,7 @@ def handle_no(word):
     """Handle the case where the suggestion is declined."""
     suggestion_yes.pack_forget()
     suggestion_no.pack_forget()
+    frame_btn.pack_forget()
     label.config(text=f"'{word}' not found.")
 
 # ---------------------------
@@ -293,6 +299,7 @@ def handle_no(word):
 window = tk.Tk()
 window.title("Dictionary")
 window.configure(bg='#262933')
+window.resizable(False, True)
 
 # Set the application icon. (Adjust the path as needed.)
 try:
@@ -302,8 +309,12 @@ try:
 except Exception as e:
     print("Icon not loaded:", e)
 
+# Frame for the entrybox & primary buttons
+frame = Frame(window)
+frame.pack(side="top")
+
 # Entry widget for word search.
-entry_w = tk.Entry(window,
+entry_w = tk.Entry(frame,
                    font=("Cantarell", 13),
                    bg='#262933',
                    fg='white',
@@ -315,53 +326,63 @@ entry_w.bind("<KeyRelease>", check_entry)
 entry_w.bind("<Return>", update_label)
 
 # Main control buttons.
-search_button = tk.Button(window, text="Search",
+search_button = tk.Button(frame, text="Search",
                           font=("Cantarell", 11),
                           bg='#262933',
                           fg='white',
                           state="disabled",
                           command=update_label)
 
-delete_button = tk.Button(window, text="Delete",
+delete_button = tk.Button(frame, text="Delete",
                           font=("Cantarell", 11),
                           bg='#262933',
                           fg='white',
                           command=delete)
 
-pronounce_button = tk.Button(window, text="Pronounce",
+pronounce_button = tk.Button(frame, text="Pronounce",
                              font=("Cantarell", 11),
                              bg='#262933',
                              fg='white',
                              command=lambda: os.system(f"espeak-ng -v en+f4 -s 150 '{entry_w.get().strip().lower()}'"))
 
+# Frame for suggestion button
+frame_btn = Frame(window, bg='#262933')
+
 # Suggestion buttons (initially not packed).
-suggestion_yes = tk.Button(window, text="Yes",
+suggestion_yes = tk.Button(frame_btn, text="Yes",
                            font=("Cantarell", 11),
                            bg='#262933',
-                           fg='green')
+                           fg='green',
+                           activeforeground='green',
+                           bd=2,
+                           relief="raised")
 # Bind the Return key for the Yes button.
 suggestion_yes.bind("<Return>", lambda event: suggestion_yes.invoke())
 
-suggestion_no = tk.Button(window, text="No",
+suggestion_no = tk.Button(frame_btn, text="No",
                           font=("Cantarell", 11),
                           bg='#262933',
-                          fg='orange')
+                          fg='orange',
+                          activeforeground='orange')
 
-overwrite_button = tk.Button(window, text="Edit",
+overwrite_button = tk.Button(frame, text="Edit",
                           font=("Cantarell", 11),
                           bg='#262933',
                           fg='red',
+                          activeforeground='red',
                           state="disabled",
                           command=lambda: overwrite(entry_w.get()))
+
 # Output label for displaying word details.
 label = tk.Label(window, text="",
                  font=("Cantarell", 12),
                  bg='#262933',
                  fg='white',
                  justify=tk.LEFT,
-                 wraplength=350)
+                 wraplength=380)
+
 # Pack the main control buttons
-label.pack(side="bottom", pady=10, padx=5)
+label.pack(side="top", pady=15, padx=5)
 search_button.pack(side="left", padx=20, pady=10)
 delete_button.pack(side="left", padx=20, pady=10)
 overwrite_button.pack(side="left",padx=20, pady=10)
