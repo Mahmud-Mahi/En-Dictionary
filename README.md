@@ -1,98 +1,138 @@
-# En-Dictionary
-A GUI based open-source English dictionary for desktop. Feel free to install & use. Also available the code for developers.
+# **Intelligent Offline & Online Dictionary | Smart Word Lookup & Pronunciation**  
 
-# How it works
-Since the dictionary doesn't use 'API keys' primarily, it provides you the full customization of the dictionary database.
+A powerful, user-friendly **offline & online dictionary** with an interactive graphical interface. It provides definitions, examples, synonyms, and antonyms for words using both **offline data** and an **online API**.
 
-it has it's own json file as the database. If the word you searched doesn't contain the database, it will use API keys to fetch the word from online & show you the result also save the word in json file. 
+Additionally, the project includes a **standalone dictionary app** built using PyInstaller, allowing users to use the dictionary without running Python scripts.
 
-Again, if you misspell the searched word it will suggest you the closest similar word.
+## **Features**  
 
-if the searched word doesn't found in neither json file nor API key, it will simply ask you to enter the result of the word & save it in json file.
+✔ **Offline & Online Search** – Retrieves word details from a local JSON database and an online API if not found offline.  
+✔ **Intelligent Word Matching** – Uses Levenshtein distance to suggest similar words if the search term is incorrect.  
+✔ **GUI-Based Search** – Built using **Tkinter**, offering an easy-to-use graphical interface.  
+✔ **Word Management** – Allows users to **add, edit, and overwrite** words in the offline dictionary.  
+✔ **Speech Feature** – Pronounces words using the `espeak-ng` package.  
+✔ **Dictionary App** – A compiled **standalone app** built with **PyInstaller**, eliminating the need for Python installation.
 
-Also you can edit the result of the searched word & save the changes in json file.
-This code is completely written in python & no need to install python interpreter to excute it.
+---
 
-You can also use keybinding to make a shortcut to excute the app
+## **Installation Guide**  
 
-# Provide
-"Definition": 
+### **For Running as a Python Script**
 
+#### **Linux & macOS**
+```sh
+sudo apt install espeak-ng   # Install speech package
+git clone https://github.com/Mahmud-Mahi/En-dictionary.git  
+cd En-dictionary  
+pip install -r requirements.txt  
+python En-dictionary.py  
+```
 
-"Examples": 
+#### **Windows**
+1. Install [Python](https://www.python.org/downloads/) (if not already installed).  
+2. Install `espeak-ng` for pronunciation.  
+3. Clone the repository and run:
+```sh
+pip install -r requirements.txt  
+python En-dictionary.py  
+```
 
-"Synonyms": 
+---
 
-"Antonyms": 
+### **For Using the Standalone Dictionary App**
 
-# Installation:
-To run this program place the 'dict' folder to your home directory & 'dictionary-app' to desktop folder.
-Open the folder & excute the 'dictionary-app'
+#### **For Windows**
+1. Open Command Prompt in "En-dictionary" directory.
+2. Run:
+```sh
+pyinstaller --onefile --windowed En-dictionary.py
+```
+3. The .exe file will be in the "dist" folder in the same directory.
+4. Move the "dict" folder to your home directory.
+5. Run:
+```sh
+mv dict ~
+```
+6. Double-click the .exe file to run the dictionary.
 
-1. Also you can add it to your panel(for XFCE) following the following steps:
+#### **For Linux**
+1. Open terminal in "En-dictionary" directory.  
+2. Give execution permission:
+```sh
+chmod +x En-dictionary
+```
+3. Move the "dict" folder to your home directory.
+4. Run:
+```sh
+mv dict ~
+```
+5. Open the app:
+```sh
+./En-dictionary
+```
 
-	Right-click on the panel (the top/bottom bar in XFCE).
+#### **For macOS **
+1. Open the terminal & navigate to your project directory.  
+2. Run:
+```sh
+pyinstaller --onefile --windowed En-dictionary.py
+```
+3. The .app file will be in the "dist" folder in the same directory.
+4. Move the "dict" folder to your home directory.
+5. Run:
+```sh
+mv dict ~
+```
+6. Double-click the .app file to run the dictionary.
 
-	Select "Panel" → "Add New Items".
+___
 
-	Search for "Launcher" and click "Add".
+## **How It Works**  
 
-	A new launcher icon will appear on the panel. Right-click on it and select "Properties".
+1. **Searching for a Word:**  
+   - Type a word in the search box and press **Enter** or click **Search**.  
+   - If the word is found in the offline dictionary, its details will be displayed.  
+   - If the word isn’t found, the application will try fetching it from the online API.  
 
-	Click the "+" button to add a new application.
+2. **Word Suggestions:**  
+   - If a word is misspelled, the program suggests a close match.  
+   - You can accept the suggestion or manually add a new word.  
 
-	Fill in the details:
+3. **Adding a Word:**  
+   - If a word is not found, you can choose to add it to the offline dictionary.  
+   - You’ll be prompted to enter a definition, examples, synonyms, and antonyms.  
 
-	Name: Your app name (e.g., "Dictionary").
+4. **Editing a Word:**  
+   - If a word exists in the dictionary, you can overwrite its details by clicking **Edit**.  
 
-	Command: The full path to your app’s script or executable (e.g., /home/usr/dictionary-app).
+5. **Deleting an Entry (Manually):**  
+   - Open `offline_dictionary.json` and remove the desired entry.  
 
-	Icon: Click the icon button and select an image.
+6. **Pronunciation Feature:**  
+   - Click **Pronounce** to hear the word spoken using `espeak-ng`.  
 
-	Click "Close", and now your app will be accessible from the panel.
+---
 
+## **Offline Dictionary File**  
+The offline dictionary is stored in:  
+```
+~/dict/offline_dictionary.json
+```
+This file is automatically updated whenever a word is added or edited.
 
-2. Launch the app from the application menu or panel(for XFCE):
-   Also you can use my 'dictionary.desktop' file for configuration. Put the file into the following path "~/.local/share/applications/" 
-   	Or, Make your own
+---
 
-	Open a terminal & run:
+## **Future Improvements**  
+🔹 Add support for more languages.  
+🔹 Improve pronunciation with additional voice options.  
+🔹 Implement a database for better performance.  
 
-	nano ~/.local/share/applications/dictionary.desktop
+---
 
-	Add the following content(modify as needed):
+## **License**  
+This project is open-source and licensed under the **MIT License**.  
 
-	[Desktop Entry]
+---
 
-	Version=1.0
-
-	Type=Application
-
-	Name=Dictionary
-
-	Exec=/home/user/dictionary-app
-
-	Icon=/home/user/icon.png
-
-	Terminal=false
-
-	Categories=Utility;
-
-
-	save(CTRL =X, then 'Y' to confirm)
-
-	Make the file executable:
-
-	chmod +x ~/.local/share/applications/dictionary.desktop
-
-	Right-click on the panel → "Add New Items" → "Launcher" → Add your app.
-
-Note: I use linux software(XFCE edition) & don't know if this program is compitable for other linux distributions, windows or mac. You can give a try to install it. 
-
-If you can't install it please notify me.
-If you are a developer feel free to upgrade it. It would be a great help.
-
-For support contact me at
-mahmudurahmanmahi26@gmail.com
-
-Thank you 😊
+## **Contributions & Issues**  
+Feel free to contribute by submitting pull requests. If you encounter any issues, open a ticket in the GitHub **Issues** section.
