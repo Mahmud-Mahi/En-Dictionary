@@ -37,7 +37,6 @@ def save_json():
     """Save the updated wordnet_data to the JSON file."""
     with open(json_file, "w") as file:
         json.dump(wordnet_data, file, indent=4)
-    messagebox.showinfo("Info", "Dictionary updated.")
     print("Dictionary updated.")
 
 def output(word):
@@ -95,12 +94,13 @@ def add_word(word):
             "antonyms": [a.strip() for a in antonyms.split(",")] if antonyms else []
         }
     try:
-        save_json(word)
-        messagebox.showinfo("Successful", f"The word '{word}' added.")
-        entry_w.focus_set()
+        save_json()
+        messagebox.showinfo("Updated", f"The word '{word}' added.")
+        entry_word.focus_set()
         suggestion_yes.pack_forget()
         suggestion_no.pack_forget()
-        output(word)
+        frame_btn.pack_forget()
+        display_result(output(word), word)
 
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred while saving: {e}")
@@ -129,10 +129,10 @@ def overwrite(word):
         "antonyms": [a.strip() for a in antonyms.split(",")] if antonyms else existing_data.get("antonyms", [])
     }
     try:
-        save_json(word)
+        save_json()
         messagebox.showinfo("Success", f"'{word}' has been updated.")
-        entry_w.focus_set()
-        return output(word)
+        entry_word.focus_set()
+        display_result(output(word), word)
 
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred while saving: {e}")
@@ -180,7 +180,7 @@ def fetch_word(word):
             "synonyms": list(synonyms),
             "antonyms": list(antonyms)
         }
-        save_json(word)
+        save_json()
         return output(word)
 
     except (KeyError, KeyboardInterrupt, requests.exceptions.RequestException) as e:
@@ -227,7 +227,7 @@ def display_result(result, search_term):
             suggestion_no.config(command=lambda w=search_term: handle_no(w))
             suggestion_yes.pack(side="left", padx=10, pady=10)
             suggestion_no.pack(side="right", padx=10, pady=10)
-            frame_btn.pack(side="bottom", padx=40, pady=40)
+            frame_btn.pack(side="bottom", padx=40, pady=0)
             # Give focus to the Yes button so Enter triggers it.
             suggestion_yes.focus_set()
         else:
@@ -237,13 +237,13 @@ def display_result(result, search_term):
             suggestion_no.config(command=lambda w=search_term: handle_no(w))
             suggestion_yes.pack(side="left", padx=10, pady=10)
             suggestion_no.pack(side="right", padx=10, pady=10)
-            frame_btn.pack(side="bottom", padx=40, pady=40)
+            frame_btn.pack(side="bottom", padx=40, pady=0)
             suggestion_yes.focus_set()
     window.update_idletasks()
 
 def update_overwrite_button(event=None):
     """Enable the overwrite button if the searched word exists in the dictionary."""
-    if entry_w.get().strip().lower() in wordnet_data:
+    if entry_word.get().strip().lower() in wordnet_data:
         overwrite_button.config(state=tk.NORMAL)
     else:
         overwrite_button.config(state=tk.DISABLED)
@@ -259,37 +259,38 @@ def update_label(event=None):
     suggestion_yes.pack_forget()
     suggestion_no.pack_forget()
     frame_btn.pack_forget()
-    search_term = entry_w.get().strip().lower()
+    search_term = entry_word.get().strip().lower()
     if search_term:
         threading.Thread(target=async_search, args=(search_term,)).start()
-        entry_w.focus_set()   # Automatically select the entry box
+        entry_word.focus_set()   # Automatically select the entry box
     else:
         label.config(text="Please enter a word.")
 
 def check_entry(event=None):
     """Enable or disable the search button based on entry content."""
-    if entry_w.get().strip():
+    if entry_word.get().strip():
         search_button.config(state=tk.NORMAL)
     else:
         search_button.config(state=tk.DISABLED)
-    entry_w.focus_set()
+    entry_word.focus_set()
 
 def delete():
     """Clear the entry widget."""
-    entry_w.delete(0, tk.END)
-    entry_w.focus_set()
+    entry_word.delete(0, tk.END)
+    entry_word.focus_set()
 
 def yes(match):
     """When a suggestion is accepted, search using the suggested word."""
     result = search_word(match)
     display_result(result, match)
-    entry_w.focus_set()
+    entry_word.focus_set()
 
 def handle_no(word):
     """Handle the case where the suggestion is declined."""
     suggestion_yes.pack_forget()
     suggestion_no.pack_forget()
     frame_btn.pack_forget()
+    entry_word.focus_set()
     label.config(text=f"'{word}' not found.")
 
 # ---------------------------
@@ -314,16 +315,16 @@ frame = Frame(window)
 frame.pack(side="top")
 
 # Entry widget for word search.
-entry_w = tk.Entry(frame,
+entry_word = tk.Entry(frame,
                    font=("Cantarell", 13),
                    bg='#262933',
                    fg='white',
                    width=35,
                    relief=tk.SUNKEN,
                    bd=2)
-entry_w.pack(pady=10, padx=5)
-entry_w.bind("<KeyRelease>", check_entry)
-entry_w.bind("<Return>", update_label)
+entry_word.pack(pady=10, padx=5)
+entry_word.bind("<KeyRelease>", check_entry)
+entry_word.bind("<Return>", update_label)
 
 # Main control buttons.
 search_button = tk.Button(frame, text="Search",
@@ -343,7 +344,7 @@ pronounce_button = tk.Button(frame, text="Pronounce",
                              font=("Cantarell", 11),
                              bg='#262933',
                              fg='white',
-                             command=lambda: os.system(f"espeak-ng -v en+f4 -s 150 '{entry_w.get().strip().lower()}'"))
+                             command=lambda: os.system(f"espeak-ng -v en+f4 -s 150 '{entry_word.get().strip().lower()}'"))
 
 # Frame for suggestion button
 frame_btn = Frame(window, bg='#262933')
@@ -371,7 +372,7 @@ overwrite_button = tk.Button(frame, text="Edit",
                           fg='red',
                           activeforeground='red',
                           state="disabled",
-                          command=lambda: overwrite(entry_w.get()))
+                          command=lambda: overwrite(entry_word.get()))
 
 # Output label for displaying word details.
 label = tk.Label(window, text="",
@@ -389,7 +390,7 @@ overwrite_button.pack(side="left",padx=20, pady=10)
 pronounce_button.pack(side="right", padx=20, pady=10)
 
 # Automatically focus the entry box when app starts
-entry_w.focus_set()
+entry_word.focus_set()
 
 # ---------------------------
 # Start the Application
