@@ -45,7 +45,7 @@ python En-dictionary.py
 1. Open Command Prompt in "En-dictionary" directory.
 2. Run:
 ```sh
-pyinstaller --onefile --windowed En-dictionary.py
+pyinstaller --onefile --windowed --icon=dictionary.icns En-dictionary.py
 ```
 3. The .exe file will be in the "dist" folder in the same directory.
 4. Move the "dict" folder to your home directory.
@@ -75,7 +75,7 @@ mv dict ~
 1. Open the terminal & navigate to your project directory.  
 2. Run:
 ```sh
-pyinstaller --onefile --windowed En-dictionary.py
+pyinstaller --onefile --windowed --icon=dictionary.icns En-dictionary.py
 ```
 3. The .app file will be in the "dist" folder in the same directory.
 4. Move the "dict" folder to your home directory.
