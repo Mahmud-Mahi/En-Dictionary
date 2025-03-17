@@ -7,6 +7,7 @@ from tkinter import *
 import threading
 import os
 import sys
+from gtts import gTTS
 
 # ---------------------------
 # Data Handling Functions
@@ -293,6 +294,18 @@ def handle_no(word):
     entry_word.focus_set()
     label.config(text=f"'{word}' not found.")
 
+def pronounce_word(word):
+    """Pronounce the given word using gTTS."""
+    try:
+        tts = gTTS(text=word, lang='en')
+        audio_file = "temp_audio.mp3"
+        tts.save(audio_file)
+        os.system("mplayer temp_audio.mp3 -nogui -quiet")
+        os.remove(audio_file)
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred while pronouncing the word: {e}")
+
+
 # ---------------------------
 # Creating the GUI
 # ---------------------------
@@ -344,7 +357,7 @@ pronounce_button = tk.Button(frame, text="Pronounce",
                              font=("Cantarell", 11),
                              bg='#262933',
                              fg='white',
-                             command=lambda: os.system(f"espeak-ng -v en+f4 -s 150 '{entry_word.get().strip().lower()}'"))
+                             command=lambda: pronounce_word(entry_word.get().strip().lower()))
 
 # Frame for suggestion button
 frame_btn = Frame(window, bg='#262933')

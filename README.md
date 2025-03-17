@@ -21,7 +21,7 @@ Additionally, the project includes a **standalone dictionary app** built using P
 
 #### **Linux & macOS**
 ```sh
-sudo apt install espeak-ng   # Install speech package
+sudo apt install mplayer   # Install speech package
 git clone https://github.com/Mahmud-Mahi/En-dictionary.git  
 cd En-dictionary  
 pip install -r requirements.txt  
@@ -30,7 +30,7 @@ python En-dictionary.py
 
 #### **Windows**
 1. Install [Python](https://www.python.org/downloads/) (if not already installed).  
-2. Install `espeak-ng` for pronunciation.  
+2. Install `mplayer` for pronunciation.  
 3. Clone the repository and run:
 ```sh
 pip install -r requirements.txt  
@@ -109,7 +109,7 @@ ___
    - Open `offline_dictionary.json` and remove the desired entry.  
 
 6. **Pronunciation Feature:**  
-   - Click **Pronounce** to hear the word spoken using `espeak-ng`.  
+   - Click **Pronounce** to hear the word spoken using `mplayer`.  
 
 ---
 
